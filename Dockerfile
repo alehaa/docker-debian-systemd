@@ -95,3 +95,13 @@ RUN rm -f           \
 # the init system. CMD will be preferred in favour of ENTRYPOINT, so one may
 # override it when creating the container to e.g. run a bash console instead.
 CMD [ "/sbin/init" ]
+
+
+# Configure sSMTP.
+#
+# After installing sSMTP, the hostname of the current container (the one used to
+# build the image) will be written into multiple configuration files. However,
+# by removing the hosname from the configuration, sSMTP is forced to dynamically
+# lookup the hostname when a new container is run from this image.
+RUN rm -f /etc/mailname
+RUN sed '/hostname/d' -i /etc/ssmtp/ssmtp.conf
