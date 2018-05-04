@@ -70,7 +70,10 @@ RUN rm -rf                        \
 # Configure systemd.
 #
 # For running systemd inside a Docker container, some additional tweaks are
-# required:
+# required. For a detailed list see:
+#
+# https://developers.redhat.com/blog/2016/09/13/ \
+#   running-systemd-in-a-non-privileged-container/
 #
 # The 'container' environment variable tells systemd that it's running iside a
 # Docker container environment.
@@ -81,9 +84,22 @@ ENV container docker
 STOPSIGNAL SIGRTMIN+3
 
 # The host's cgroup filesystem need's to be mounted (read-only) in the
-# container. '/run' and '/tmp' need to be tmpfs filesystems when running the
-# container without 'CAP_SYS_ADMIN'.
-VOLUME [ "/sys/fs/cgroup", "/run", "/tmp" ]
+# container. '/run', '/run/lock' and '/tmp' need to be tmpfs filesystems when
+# running the container without 'CAP_SYS_ADMIN'.
+#
+# NOTE: For running Debian stretch, 'CAP_SYS_ADMIN' still needs to be added, as
+#       stretch's version of systemd is not recent enough. Buster will run just
+#       fine without 'CAP_SYS_ADMIN'.
+VOLUME [ "/sys/fs/cgroup", "/run", "/run/lock", "/tmp" ]
+
+# To avoid ugly warnings when running this image on a host running systemd, the
+# following units will be masked.
+#
+# NOTE: This will not remove ALL warnings in all Debian releases, but seems to
+#       work for stretch.
+RUN systemctl mask --   \
+    dev-hugepages.mount \
+    sys-fs-fuse-connections.mount
 
 # The machine-id should be generated when creating the container. This will be
 # done automatically if the file is not present, so let's delete it.
