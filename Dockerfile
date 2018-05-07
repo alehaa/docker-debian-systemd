@@ -25,13 +25,8 @@
 # (pointing to the current stable release) of the parent image will be used.
 # However, an alternate parent tag may be set by defining the 'VERSION' build
 # argument to a specific Debian release, e.g. 'stretch' or 'buster'.
-ARG  VERSION=latest
-FROM debian:${VERSION}
-
-
-# Set the image's meta-data.
-LABEL maintainer="ahaase@alexhaase.de"
-LABEL release=${VERSION}
+ARG  RELEASE=latest
+FROM debian:${RELEASE}
 
 
 # Install the neccessary packages.
