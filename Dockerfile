@@ -36,6 +36,10 @@ FROM debian:${RELEASE}
 # installed, the apt caches and some log files will be removed to minimize the
 # image.
 #
+# NOTE: An upgrade will be performed to include updates and security fixes of
+#       installed packages that received updates in the Debian repository after
+#       the upstream image has been created.
+#
 # NOTE: Instead of exim4, sSMTP will be used to deliver system mails to a local
 #       mail relay instead of running an MTA in each container. Please file an
 #       issue if you think this should be changed.
@@ -43,6 +47,7 @@ FROM debian:${RELEASE}
 # NOTE: No syslog daemon will be installed, as systemd's journald should fit
 #       most needs. Please file an issue if you think this should be changed.
 RUN apt-get update
+RUN apt-get dist-upgrade -y
 RUN apt-get install -y \
         systemd        \
         systemd-sysv   \
