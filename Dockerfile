@@ -23,7 +23,7 @@
 
 # This image bases on the regular Debian image. By default the 'latest' tag
 # (pointing to the current stable release) of the parent image will be used.
-# However, an alternate parent tag may be set by defining the 'VERSION' build
+# However, an alternate parent tag may be set by defining the 'RELEASE' build
 # argument to a specific Debian release, e.g. 'stretch' or 'buster'.
 ARG  RELEASE=latest
 FROM debian:${RELEASE}
