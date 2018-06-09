@@ -118,7 +118,7 @@ docker build                       \
 #
 # NOTE: Uploading the image is required for creating the manifest. Otherwise the
 #       image can be used local only.
-if [ $IMAGE_PUSH == 1 ]
+if [ "$IMAGE_PUSH" -eq 1 ]
 then
     docker push $IMAGE
 fi
