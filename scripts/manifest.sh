@@ -3,7 +3,7 @@
 # This file is part of docker-debian-systemd.
 #
 # Copyright (c)
-#   2018 Alexander Haase <ahaase@alexhaase.de>
+#   2018 Alexander Haase <ahaase@mksec.de>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -40,7 +40,7 @@
 #
 # NOTE: Especially the image name should be changed, when this script is NOT run
 #       by the writer of this script.
-IMAGE_NAME='alehaa/debian-systemd'
+IMAGE_NAME='mksec/debian-systemd'
 IMAGE_TAG='stretch'
 IMAGE_ARCHITECTURES=''
 IMAGE_DUPLICATES=''
