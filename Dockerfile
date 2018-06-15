@@ -59,8 +59,6 @@ RUN apt-get install -y \
 RUN apt-get clean
 RUN rm -rf                        \
     /var/lib/apt/lists/*          \
-    /var/cache/apt/archives       \
-    /var/cache/ldconfig/aux-cache \
     /var/log/alternatives.log     \
     /var/log/apt/history.log      \
     /var/log/apt/term.log         \
