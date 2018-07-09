@@ -40,7 +40,7 @@ To get the cgroup mounted in the Docker VM, you can login into the VM by running
 
 ```
 sudo -s
-cat << EOF >> /var/lib/boot2docker/bootsync.sh
+cat >> /var/lib/boot2docker/bootsync.sh <<EOF
 mkdir /sys/fs/cgroup/systemd
 mount -t cgroup -o none,name=systemd cgroup /sys/fs/cgroup/systemd
 EOF
