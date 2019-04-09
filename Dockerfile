@@ -1,7 +1,7 @@
 # This file is part of docker-debian-systemd.
 #
 # Copyright (c)
-#   2018 Alexander Haase <ahaase@mksec.de>
+#   2018-2019 Alexander Haase <ahaase@mksec.de>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal

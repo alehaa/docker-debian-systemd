@@ -51,4 +51,4 @@ EOF
 
 This project is licensed under the [MIT License](LICENSE).
 
-&copy; 2018 Alexander Haase
+&copy; 2018-2019 Alexander Haase
