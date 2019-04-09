@@ -81,6 +81,59 @@ RUN rm -rf                        \
 # https://developers.redhat.com/blog/2016/09/13/ \
 #   running-systemd-in-a-non-privileged-container/
 #
+# Additional tweaks will be applied in the final image below.
+
+# To avoid ugly warnings when running this image on a host running systemd, the
+# following units will be masked.
+#
+# NOTE: This will not remove ALL warnings in all Debian releases, but seems to
+#       work for stretch.
+RUN systemctl mask --   \
+    dev-hugepages.mount \
+    sys-fs-fuse-connections.mount
+
+# The machine-id should be generated when creating the container. This will be
+# done automatically if the file is not present, so let's delete it.
+RUN rm -f           \
+    /etc/machine-id \
+    /var/lib/dbus/machine-id
+
+
+# Configure sSMTP.
+#
+# After installing sSMTP, the hostname of the current container (the one used to
+# build the image) will be written into multiple configuration files. However,
+# by removing the hostname from the configuration, sSMTP is forced to dynamically
+# lookup the hostname when a new container is run from this image.
+RUN rm -f /etc/mailname
+RUN sed '/hostname/d' -i /etc/ssmtp/ssmtp.conf
+
+
+
+
+# Build the final image.
+#
+# To get a minimal image without deleted files in intermediate layers, the
+# contents of the image previously built will be copied into a second version of
+# the parent image.
+#
+# NOTE: This method requires buildkit, as the differ of buildkit will copy
+#       changed files only and we'll get a minimal image with just the changed
+#       files in a single new layer.
+#
+# NOTE: All settings related to the image's environment (e.g. CMD, ENV and
+#       VOLUME settings) need to be set in the following image definition to be
+#       used by child images and containers.
+
+FROM debian:${TAG}
+COPY --from=0 / /
+
+
+# Configure systemd.
+#
+# For running systemd inside a Docker container, some additional tweaks are
+# required. Some of them have already been applied above.
+#
 # The 'container' environment variable tells systemd that it's running inside a
 # Docker container environment.
 ENV container docker
@@ -98,32 +151,7 @@ STOPSIGNAL SIGRTMIN+3
 #       fine without 'CAP_SYS_ADMIN'.
 VOLUME [ "/sys/fs/cgroup", "/run", "/run/lock", "/tmp" ]
 
-# To avoid ugly warnings when running this image on a host running systemd, the
-# following units will be masked.
-#
-# NOTE: This will not remove ALL warnings in all Debian releases, but seems to
-#       work for stretch.
-RUN systemctl mask --   \
-    dev-hugepages.mount \
-    sys-fs-fuse-connections.mount
-
-# The machine-id should be generated when creating the container. This will be
-# done automatically if the file is not present, so let's delete it.
-RUN rm -f           \
-    /etc/machine-id \
-    /var/lib/dbus/machine-id
-
 # As this image should run systemd, the default command will be changed to start
 # the init system. CMD will be preferred in favor of ENTRYPOINT, so one may
 # override it when creating the container to e.g. to run a bash console instead.
 CMD [ "/sbin/init" ]
-
-
-# Configure sSMTP.
-#
-# After installing sSMTP, the hostname of the current container (the one used to
-# build the image) will be written into multiple configuration files. However,
-# by removing the hostname from the configuration, sSMTP is forced to dynamically
-# lookup the hostname when a new container is run from this image.
-RUN rm -f /etc/mailname
-RUN sed '/hostname/d' -i /etc/ssmtp/ssmtp.conf
