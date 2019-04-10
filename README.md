@@ -44,6 +44,7 @@ cat >> /var/lib/boot2docker/bootsync.sh <<EOF
 mkdir /sys/fs/cgroup/systemd
 mount -t cgroup -o none,name=systemd cgroup /sys/fs/cgroup/systemd
 EOF
+exit
 ```
 
 
