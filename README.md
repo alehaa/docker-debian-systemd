@@ -8,12 +8,12 @@
 ## About
 
 This Docker image enhances the [Debian image](https://hub.docker.com/_/debian)
-to run a full OS (including systemd as init system), allowing it to be used like
-an LXC container.
+to be run like a VM or LXC container including systemd as init system and other
+utilities.
 
-In addition to systemd cron and anacron will be installed. A basic mail transfer
-is enabled via sSMTP to forward mails to a local MTA. In contrast to the Debian
-CD images rsyslog will *NOT* be installed, as journald should fit most needs.
+In addition to systemd cron and anacron will be installed. However, in contrast
+to the official Debian CD, rsyslog will *NOT* be installed, as journald should
+fit most needs.
 
 The image is provided as multi arch image. At the moment the `amd64` and `arm64`
 architectures are enabled.

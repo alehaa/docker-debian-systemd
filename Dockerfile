@@ -48,21 +48,15 @@ RUN echo 'debconf debconf/frontend select teletype' | debconf-set-selections
 #       installed packages that received updates in the Debian repository after
 #       the upstream image has been created.
 #
-# NOTE: Instead of exim4, sSMTP will be used to deliver system mails to a local
-#       mail relay instead of running an MTA in each container. Please file an
-#       issue if you think this should be changed.
-#
 # NOTE: No syslog daemon will be installed, as systemd's journald should fit
 #       most needs. Please file an issue if you think this should be changed.
 RUN apt-get update
 RUN apt-get dist-upgrade -y
-RUN apt-get install -y \
-        systemd        \
-        systemd-sysv   \
-        cron           \
-        anacron        \
-        ssmtp          \
-        rsyslog-
+RUN apt-get install -y --no-install-recommends \
+        systemd      \
+        systemd-sysv \
+        cron         \
+        anacron
 
 RUN apt-get clean
 RUN rm -rf                        \
@@ -97,16 +91,6 @@ RUN systemctl mask --   \
 RUN rm -f           \
     /etc/machine-id \
     /var/lib/dbus/machine-id
-
-
-# Configure sSMTP.
-#
-# After installing sSMTP, the hostname of the current container (the one used to
-# build the image) will be written into multiple configuration files. However,
-# by removing the hostname from the configuration, sSMTP is forced to dynamically
-# lookup the hostname when a new container is run from this image.
-RUN rm -f /etc/mailname
-RUN sed '/hostname/d' -i /etc/ssmtp/ssmtp.conf
 
 
 
