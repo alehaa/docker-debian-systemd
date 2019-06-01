@@ -44,9 +44,13 @@ stages:
 build stretch:
   extends: .build_docker
   stage:   build
-  script:  ci-buildctl -t stretch -t latest -- --opt build-arg:TAG=stretch
+  script:
+    - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
+    - ci-buildctl -t stretch -t latest -- --opt build-arg:TAG=stretch
 
 build buster:
   extends: .build_docker
   stage:   build
-  script:  ci-buildctl -t buster -- --opt build-arg:TAG=buster
+  script:
+    - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
+    - ci-buildctl -t buster -- --opt build-arg:TAG=buster
