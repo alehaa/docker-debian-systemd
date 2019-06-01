@@ -1,0 +1,52 @@
+# This file is part of docker-debian-systemd.
+#
+# Copyright (c)
+#   2018-2019 Alexander Haase <ahaase@alexhaase.de>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+# Include the CI template.
+#
+# NOTE: This file / project is NOT publically available.
+include:
+  - project: 'gitlab-ci/builder/docker'
+    file: '/ci-template.yml'
+
+
+# Configure buildctl wrapper.
+#
+# The image should be build for all available platforms and be pushed to GitLab
+# and Docker hub.
+variables:
+  BUILDCTL_IMAGE:     "$CI_REGISTRY_IMAGE,alehaa/debian-systemd"
+  BUILDCTL_PLATFORMS: "linux/i386,linux/amd64,linux/armhf,linux/arm64"
+
+
+stages:
+  - build
+
+build stretch:
+  extends: .build_docker
+  stage:   build
+  script:  ci-buildctl -t stretch -t latest -- --opt build-arg:TAG=stretch
+
+build buster:
+  extends: .build_docker
+  stage:   build
+  script:  ci-buildctl -t buster -- --opt build-arg:TAG=buster
